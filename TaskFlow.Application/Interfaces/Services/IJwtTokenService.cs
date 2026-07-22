@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaskFlow.Application.DTO.Auth;
+using TaskFlow.Domain.Enities;
 
 namespace TaskFlow.Application.Interfaces.Services
 {
-    public interface IAuthService
+    public interface IJwtTokenService
     {
-        Task<AuthResponseDto> RegisterAsync(RegisterDto dto);
-
-        Task<AuthResponseDto> LoginAsync(LoginDto dto);
+        JwtTokenResultDto GenerateAccessToken(User user);
     }
 }

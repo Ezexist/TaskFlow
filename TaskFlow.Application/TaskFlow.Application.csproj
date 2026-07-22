@@ -10,9 +10,12 @@
     <Folder Include="DTO\Projects\" />
     <Folder Include="DTO\Tasks\" />
     <Folder Include="DTO\Comments\" />
-    <Folder Include="Services\" />
     <Folder Include="Mappings\" />
-    <Folder Include="Validators\Auth\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="RavenDB.Client" Version="7.2.5" />
   </ItemGroup>
 
   <ItemGroup>
