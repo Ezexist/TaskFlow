@@ -15,4 +15,4 @@ namespace TaskFlow.Application.DTO.Auth
         public DateTimeOffset ExpiresAt { get; set; }
     }
 }
-}
+

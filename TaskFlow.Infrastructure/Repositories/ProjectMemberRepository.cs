@@ -42,7 +42,7 @@ namespace TaskFlow.Infrastructure.Repositories
         public async Task<bool> IsProjectMemberAsync(int projectId, int useId)
         {
             return await _context.ProjectMembers
-                .AnyAsync(pm => projectId == pm.Id &&
+                .AnyAsync(pm => projectId == pm.ProjectId &&
                 pm.UserId == useId);
         }
     }

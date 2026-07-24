@@ -7,10 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\Projects\" />
     <Folder Include="DTO\Tasks\" />
     <Folder Include="DTO\Comments\" />
-    <Folder Include="Mappings\" />
   </ItemGroup>
 
   <ItemGroup>

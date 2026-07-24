@@ -33,6 +33,8 @@ namespace TaskFlow.Infrastructure.Repositories
         public async Task<Project?> GetByIdAsync(int id)
         {
             return await _context.Projects
+                .Include(x => x.Owner)
+                .Include(x => x.Members)
                 .FirstOrDefaultAsync(x  => x.Id == id);
         }
 

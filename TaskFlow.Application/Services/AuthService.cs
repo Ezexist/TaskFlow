@@ -1,4 +1,5 @@
 ﻿
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,16 +21,32 @@ namespace TaskFlow.Application.Services
         private readonly IJwtTokenService _jwtTokenService;
         private readonly IRefreshTokenService _refreshTokenService;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IValidator<RegisterDto> _registerValidator;
+        private readonly IValidator<LoginDto> _loginValidator;
         public AuthService(IUserRepository userRepository, IPasswordHasher passwordHasher,
-            IJwtTokenService jwtTokenService, IRefreshTokenService refreshTokenService)
+            IJwtTokenService jwtTokenService, IRefreshTokenService refreshTokenService,
+            IRefreshTokenRepository refreshTokenRepository,
+            IValidator<RegisterDto> registerValidator, IValidator<LoginDto> loginValidator)
         {
             _userRepo = userRepository;
             _passwordHasher = passwordHasher;
             _jwtTokenService = jwtTokenService;
             _refreshTokenService = refreshTokenService;
+            _refreshTokenRepository = refreshTokenRepository;
+            _registerValidator = registerValidator;
+            _loginValidator = loginValidator;
         }
         public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
         {
+            var validationResult = await _loginValidator.ValidateAsync(dto);
+
+            if (!validationResult.IsValid)
+            {
+                throw new BadRequestException(
+                    string.Join(Environment.NewLine,
+                        validationResult.Errors.Select(x => x.ErrorMessage)));
+            }
+
             var user = await _userRepo.GetByEmailAsync(dto.Email);
 
             if (user == null)
@@ -112,7 +129,15 @@ namespace TaskFlow.Application.Services
 
         public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
         {
-            if(await _userRepo.ExistsByEmailAsync(dto.Email))
+            var validationResult = await _registerValidator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
+            {
+                throw new BadRequestException(
+                    string.Join(Environment.NewLine,
+                    validationResult.Errors.Select(x => x.ErrorMessage)));
+            }
+
+            if (await _userRepo.ExistsByEmailAsync(dto.Email))
             {
                 throw new ConflictException("Email is already in use ");
             }

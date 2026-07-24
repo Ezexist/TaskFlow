@@ -33,7 +33,7 @@ namespace TaskFlow.Infrastructure.Persistence.Configurations
 
             builder.HasOne(x => x.User)
                 .WithMany(x => x.RefreshTokens)
-                .HasForeignKey(x => x.User.Id)
+                .HasForeignKey(x => x.UserId)
                 .HasConstraintName("FK_RefreshToken_User_UserId")
                 .OnDelete(DeleteBehavior.Cascade);
         }
