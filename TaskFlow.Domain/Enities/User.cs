@@ -20,11 +20,13 @@ namespace TaskFlow.Domain.Enities
 
         public ICollection<Project> OwnedProjects {  get; set; } = [];
         public ICollection<ProjectMember> ProjectMemberships { get; set; } = [];
-        public ICollection<TaskItem> CreatedTasks { get; set; } = new List<TaskItem>();
-        public ICollection<TaskItem> AssignedTasks { get; set; } = new List<TaskItem>();
-        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        public ICollection<TaskItem> CreatedTasks { get; set; } = [];
+        public ICollection<TaskItem> AssignedTasks { get; set; } = [];
+        public ICollection<Comment> Comments { get; set; } = [];
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = [];
 
-        
+
+
     }
 
 }

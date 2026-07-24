@@ -48,6 +48,15 @@ namespace TaskFlow.Infrastructure.Services
                 expires: expiresAt.UtcDateTime,
                 signingCredentials: credentials
                 );
+            var tokenHandler = new JwtSecurityTokenHandler();
+            
+            var accessToken = tokenHandler.WriteToken(token);
+
+            return new JwtTokenResultDto
+            {
+                Token = accessToken,
+                ExpiresAt = expiresAt,
+            };
         }
     }
 }

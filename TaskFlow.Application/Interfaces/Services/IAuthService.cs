@@ -12,5 +12,7 @@ namespace TaskFlow.Application.Interfaces.Services
         Task<AuthResponseDto> RegisterAsync(RegisterDto dto);
 
         Task<AuthResponseDto> LoginAsync(LoginDto dto);
+        Task<AuthResponseDto> RefreshAsync(RefreshTokenRequestDto dto);
+        Task LogoutAsync(string refreshToken);
     }
 }

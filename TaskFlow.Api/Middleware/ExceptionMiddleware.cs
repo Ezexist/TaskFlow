@@ -40,6 +40,8 @@ namespace TaskFlow.Api.Middleware
 
                 ConflictException => StatusCodes.Status409Conflict,
 
+                UnauthorizedException => StatusCodes.Status401Unauthorized,
+
                 _ => StatusCodes.Status500InternalServerError
             };
 
