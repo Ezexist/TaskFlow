@@ -39,6 +39,21 @@ namespace TaskFlow.Infrastructure.Repositories
                 .FirstOrDefaultAsync(pm => pm.Id == id);
         }
 
+        public async Task<ProjectMember?> GetByProjectAndUserId(int projectId, int userId)
+        {
+            return await _context.ProjectMembers
+                .FirstOrDefaultAsync(x => x.ProjectId == projectId && x.UserId == userId);
+        }
+
+        public async Task<IEnumerable<ProjectMember>> GetProjectMembersAsync(int projectId)
+        {
+            return await _context.ProjectMembers
+                .AsNoTracking()
+                .Include(x => x.User)
+                .Where(x => x.ProjectId == projectId)
+                .ToListAsync();
+        }
+
         public async Task<bool> IsProjectMemberAsync(int projectId, int useId)
         {
             return await _context.ProjectMembers

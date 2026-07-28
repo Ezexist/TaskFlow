@@ -13,5 +13,7 @@ namespace TaskFlow.Application.Interfaces.Repositories
         Task<bool> IsProjectMemberAsync(int projectId, int useId);
         Task AddAsync(ProjectMember projectMember);
         Task DeleteAsync(ProjectMember projectMember);
+        Task<IEnumerable<ProjectMember>> GetProjectMembersAsync(int projectId);
+        Task<ProjectMember?> GetByProjectAndUserId(int projectId, int userId);
     }
 }

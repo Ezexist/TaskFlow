@@ -54,6 +54,11 @@ namespace TaskFlow.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public Task<TaskItem?> GetDetailsByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<TaskItem>> GetOverdueTasksAsync()
         {
             return await _context.Tasks
