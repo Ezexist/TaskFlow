@@ -18,7 +18,7 @@ namespace TaskFlow.Domain.Enities
         public User User { get; set; } = null!;
 
         public DateTimeOffset JoinedAt { get; set; }
-        public ProjectRole ProjectRole { get; set; }
+        public ProjectRole Role { get; set; }
 
     }
 }

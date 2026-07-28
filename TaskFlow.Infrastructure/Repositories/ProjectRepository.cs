@@ -33,15 +33,22 @@ namespace TaskFlow.Infrastructure.Repositories
         public async Task<Project?> GetByIdAsync(int id)
         {
             return await _context.Projects
+                .FirstOrDefaultAsync(x  => x.Id == id);
+        }
+
+        public async Task<Project?> GetDetailsByIdAsync(int id)
+        {
+            return await _context.Projects
                 .Include(x => x.Owner)
                 .Include(x => x.Members)
-                .FirstOrDefaultAsync(x  => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IEnumerable<Project>> GetByUserIdAsync(int userId)
         {
             return await _context.Projects
                 .AsNoTracking()
+                .Include(x => x.Owner)
                 .Where(p => p.Members.Any(m => m.UserId == userId))
                 .ToListAsync();
         }

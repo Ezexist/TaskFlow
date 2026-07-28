@@ -10,6 +10,7 @@ namespace TaskFlow.Application.Interfaces.Repositories
     public interface IProjectRepository
     {
         Task<Project?> GetByIdAsync(int id);
+        Task<Project?> GetDetailsByIdAsync(int id);
         Task<IEnumerable<Project>> GetByUserIdAsync(int userId);
         Task AddAsync(Project project);
         Task UpdateAsync(Project project);

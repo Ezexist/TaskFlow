@@ -20,7 +20,7 @@ namespace TaskFlow.Infrastructure.Persistence.Configurations
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .IsRequired();
 
-            builder.Property(x => x.ProjectRole)
+            builder.Property(x => x.Role)
                 .IsRequired();
 
             builder.HasOne(x => x.Project)
