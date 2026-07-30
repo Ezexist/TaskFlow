@@ -36,6 +36,8 @@ namespace TaskFlow.Infrastructure.Repositories
         {
             return await _context.Tasks
                 .AsNoTracking()
+                .Include(t => t.CreatedBy)
+                .Include(t => t.AssignedUser)
                 .Where(x => x.AssignedUserId == userId)
                 .ToListAsync();
         }
@@ -46,25 +48,37 @@ namespace TaskFlow.Infrastructure.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<TaskItem>> GetByProjectIAsync(int projectId)
+        public async Task<IEnumerable<TaskItem>> GetByProjectIdAsync(int projectId)
         {
             return await _context.Tasks
                 .AsNoTracking()
+                .Include(x => x.AssignedUser)
+                .Include(x => x.CreatedBy)
                 .Where(p => p.ProjectId == projectId)
+                .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync();
         }
 
-        public Task<TaskItem?> GetDetailsByIdAsync(int id)
+        public async Task<TaskItem?> GetDetailsByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Tasks
+                .Include(x => x.AssignedUser)
+                .Include(x => x.Project)
+                    .ThenInclude(x => x.Members)
+                .Include(x => x.CreatedBy)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<TaskItem>> GetOverdueTasksAsync()
+        public async Task<IEnumerable<TaskItem>> GetOverdueTasksAsync(int userId)
         {
             return await _context.Tasks
                 .AsNoTracking()
-                .Where(x => x.Deadline < DateTimeOffset.UtcNow && 
-                x.Status != Status.Done)
+                .Include(t => t.CreatedBy)
+                .Include(t => t.AssignedUser)
+                .Where(x =>
+                x.Deadline < DateTimeOffset.UtcNow &&
+                x.Status != Status.Done &&
+                x.Project.Members.Any(x => x.UserId == userId))
                 .ToListAsync();
         }
 

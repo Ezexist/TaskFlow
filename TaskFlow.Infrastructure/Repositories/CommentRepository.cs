@@ -42,8 +42,23 @@ namespace TaskFlow.Infrastructure.Repositories
         {
             return await _context.Comments
                 .AsNoTracking()
+                .Include(x => x.User)
                 .Where(x => x.TaskItemId == taskId)
                 .ToListAsync();
+        }
+
+        public async Task<Comment?> GetDetailsByIdAsync(int id)
+        {
+            return await _context.Comments
+              .AsNoTracking()
+              .Include(x => x.User)
+              .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task UpdateAsync(Comment comment)
+        {
+            _context.Comments.Update(comment);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -9,6 +9,7 @@ namespace TaskFlow.Application.Interfaces.Repositories
 {
     public interface ICommentRepository
     {
+        Task<Comment?> GetDetailsByIdAsync(int id);
         Task<Comment?> GetByIdAsync(int id);
 
         Task<IEnumerable<Comment>> GetByTaskIdAsync(int taskId);
@@ -16,5 +17,6 @@ namespace TaskFlow.Application.Interfaces.Repositories
         Task AddAsync(Comment comment);
 
         Task DeleteAsync(Comment comment);
+        Task UpdateAsync(Comment comment);
     }
 }

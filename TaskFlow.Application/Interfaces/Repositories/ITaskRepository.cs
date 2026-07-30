@@ -11,10 +11,10 @@ namespace TaskFlow.Application.Interfaces.Repositories
     {
         Task<TaskItem?> GetByIdAsync(int id);
         Task<TaskItem?> GetDetailsByIdAsync(int id);
-        Task<IEnumerable<TaskItem>> GetByProjectIAsync(int projectId);
+        Task<IEnumerable<TaskItem>> GetByProjectIdAsync(int projectId);
         Task<IEnumerable<TaskItem>> GetByAssignedUserIdAsync(int userId);
 
-        Task<IEnumerable<TaskItem>> GetOverdueTasksAsync();
+        Task<IEnumerable<TaskItem>> GetOverdueTasksAsync(int userId);
 
         Task AddAsync(TaskItem task);
 
