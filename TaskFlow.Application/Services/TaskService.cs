@@ -54,41 +54,16 @@ namespace TaskFlow.Application.Services
 
                 await _taskRepository.UpdateAsync(task);
 
-                var updatedTask =
-                    await _taskRepository.GetDetailsByIdAsync(task.Id);
-
-                return updatedTask!.ToResponseDto();
+                return await GetTaskResponseAsync(task.Id);
             }
 
-            var assignedUser = await _userRepository
-                .GetByIdAsync(dto.AssignedUserId.Value);
-
-            if (assignedUser is null)
-            {
-                throw new NotFoundException(
-                    "Assigned user not found.");
-            }
-
-            var isProjectMember =
-                await _projectMemberRepository
-                    .IsProjectMemberAsync(
-                        task.ProjectId,
-                        dto.AssignedUserId.Value);
-
-            if (!isProjectMember)
-            {
-                throw new BadRequestException(
-                    "Assigned user is not a member of this project.");
-            }
+            await EnsureAssignedUserAsync(task.ProjectId, dto.AssignedUserId);
 
             task.AssignedUserId = dto.AssignedUserId;
 
             await _taskRepository.UpdateAsync(task);
 
-            var result =
-                await _taskRepository.GetDetailsByIdAsync(task.Id);
-
-            return result!.ToResponseDto();
+            return await GetTaskResponseAsync(task.Id);
         }
 
         public async Task<TaskResponseDto> CreateAsync(int projectId, int userId, CreateTaskDto dto)
@@ -109,14 +84,7 @@ namespace TaskFlow.Application.Services
 
             EnsureMember(project, userId);
 
-            if (dto.AssignedUserId.HasValue)
-            {
-                var assignedUser = await _userRepository.GetByIdAsync(dto.AssignedUserId.Value);
-                if (assignedUser is null)
-                {
-                    throw new NotFoundException("Assigned user not found");
-                } 
-            }
+           await EnsureAssignedUserAsync(projectId, userId);
 
             var task = new TaskItem
             {
@@ -133,13 +101,9 @@ namespace TaskFlow.Application.Services
             };
 
             await _taskRepository.AddAsync(task);
-            
-            var createdTask = await _taskRepository.GetDetailsByIdAsync(task.Id);
 
-            return createdTask!.ToResponseDto();
-
+            return await GetTaskResponseAsync(task.Id);
         }
-
         public async Task DeleteAsync(int taskId, int userId)
         {
             var task = await GetTaskForUserAsync(taskId, userId);
@@ -166,7 +130,6 @@ namespace TaskFlow.Application.Services
             var tasks = await _taskRepository.GetByProjectIdAsync(projectId);
 
             return tasks.Select(x => x.ToResponseDto());
-
         }
 
         public async Task<IEnumerable<TaskResponseDto>> GetMyTasksAsync(int userId)
@@ -193,22 +156,7 @@ namespace TaskFlow.Application.Services
                     validatorResult.Errors.Select(x => x.ErrorMessage)));
             }
             var task = await GetTaskForUserAsync(taskId, userId);
-            if (dto.AssignedUserId.HasValue)
-            {
-                var assignedUser = await _userRepository.GetByIdAsync
-                    (dto.AssignedUserId.Value);
-                if(assignedUser is null)
-                {
-                    throw new NotFoundException("Assigned user not found");
-                }
-
-                var isProjectMember =  await _projectMemberRepository.IsProjectMemberAsync
-                    (task.ProjectId, dto.AssignedUserId.Value);
-                if (!isProjectMember)
-                {
-                    throw new BadRequestException("Assigned user is not project member");
-                }
-            }
+            await EnsureAssignedUserAsync(task.ProjectId,dto.AssignedUserId);
 
             task.Title = dto.Title;
             task.Description = dto.Description;
@@ -219,8 +167,6 @@ namespace TaskFlow.Application.Services
             await _taskRepository.UpdateAsync(task);
 
             return await GetTaskResponseAsync(task.Id);
-
-
         }
 
         public async Task<TaskResponseDto> UpdateStatusAsync(int taskId, int userId, UpdateTaskStatusDto dto)
@@ -238,15 +184,13 @@ namespace TaskFlow.Application.Services
             task.Status = dto.Status;
             await _taskRepository.UpdateAsync(task);
 
-            var updatedTask = await _taskRepository.GetDetailsByIdAsync(task.Id);
-
-            return updatedTask!.ToResponseDto();
+            return await GetTaskResponseAsync(task.Id);
         }
 
 
 
-
-        private ProjectMember EnsureMember(Project project, int userId)
+        //PRIVATE
+        private void EnsureMember(Project project, int userId)
         {
             var member = project.Members
                 .FirstOrDefault(x => x.UserId == userId);
@@ -256,9 +200,8 @@ namespace TaskFlow.Application.Services
                 throw new BadRequestException( "You don't have access to this project.");
             }
 
-            return member;
-        }
 
+        }
         private async Task<TaskItem> GetTaskForUserAsync(int taskId,int userId)
         {
             var task = await _taskRepository
@@ -273,7 +216,6 @@ namespace TaskFlow.Application.Services
 
             return task;
         }
-
         private async Task<TaskResponseDto> GetTaskResponseAsync(int taskId)
         {
             var task = await _taskRepository
@@ -286,7 +228,6 @@ namespace TaskFlow.Application.Services
 
             return task.ToResponseDto();
         }
-
         private async Task EnsureAssignedUserAsync(int projectId,int? assignedUserId)
         {
             if (!assignedUserId.HasValue)

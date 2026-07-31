@@ -4,6 +4,8 @@ using TaskFlow.Application.Services;
 using System.Security.Claims;
 using TaskFlow.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
+using TaskFlow.Application.Interfaces.Others;
+using TaskFlow.Application.DTO.Queries;
 
 namespace TaskFlow.Api.Controllers
 {
@@ -13,9 +15,11 @@ namespace TaskFlow.Api.Controllers
     public class ProjectsController : BaseController
     {
         private readonly IProjectService _projectService;
-        public ProjectsController(IProjectService projectService)
+        private readonly IProjectQueryService _queryService;
+        public ProjectsController(IProjectService projectService, IProjectQueryService queryService)
         {
             _projectService = projectService;
+            _queryService = queryService;
         }
 
         [HttpPost]
@@ -51,6 +55,13 @@ namespace TaskFlow.Api.Controllers
         {
             await _projectService.DeleteAsync(id,UserId);
             return NoContent();
+        }
+
+        [HttpGet("Summary")]
+        public async Task<ActionResult<IEnumerable<ProjectSummaryDto>>> GetSummary()
+        {
+            var result = await _queryService.GetSummaryAsync(UserId);
+            return Ok(result);
         }
 
     }

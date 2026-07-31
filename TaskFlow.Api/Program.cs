@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -5,15 +6,17 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using TaskFlow.Api.Extensions;
 using TaskFlow.Api.Middleware;
+using TaskFlow.Application.Interfaces.Others;
 using TaskFlow.Application.Interfaces.Repositories;
 using TaskFlow.Application.Interfaces.Services;
 using TaskFlow.Application.Services;
+using TaskFlow.Application.Services.QueryService;
 using TaskFlow.Application.Validators.Auth;
 using TaskFlow.Infrastructure.Authentication;
+using TaskFlow.Infrastructure.Dapper.Queries;
 using TaskFlow.Infrastructure.Persistence;
 using TaskFlow.Infrastructure.Repositories;
 using TaskFlow.Infrastructure.Services;
-using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,6 +69,8 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+builder.Services.AddScoped<IProjectQuery, ProjectQuery>();
+builder.Services.AddScoped<IProjectQueryService, ProjectQueryService>();
 // Services
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IAuthService,AuthService>();
