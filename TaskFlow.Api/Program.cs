@@ -15,6 +15,7 @@ using TaskFlow.Application.Validators.Auth;
 using TaskFlow.Infrastructure.Authentication;
 using TaskFlow.Infrastructure.Dapper.Queries;
 using TaskFlow.Infrastructure.Persistence;
+using TaskFlow.Infrastructure.Persistence.Database;
 using TaskFlow.Infrastructure.Repositories;
 using TaskFlow.Infrastructure.Services;
 
@@ -26,6 +27,8 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
+
+
 
 
 builder.Services.AddSwaggerGen(options =>
@@ -132,6 +135,9 @@ builder.Services.AddAuthorization();
 
 
 var app = builder.Build();
+
+// Initialize the database
+await DatabaseInitializer.InitializeAsync<TaskFlowDbContext>(app.Services, app.Logger);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

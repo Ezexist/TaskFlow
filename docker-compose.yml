@@ -1,0 +1,53 @@
+services:
+  taskflow-db:
+    image: postgres:17
+    container_name: taskflow-db
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+    networks:
+      - taskflow-network
+
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+        start_period: 10s
+
+  taskflow-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: taskflow-api
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+
+      ConnectionStrings__DefaultConnection: Host=${DB_HOST};Port=${DB_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+
+    depends_on:
+      taskflow-db:
+        condition: service_healthy     
+
+    networks:
+      - taskflow-network
+
+volumes:
+  postgres-data:
+
+networks:
+  taskflow-network:
