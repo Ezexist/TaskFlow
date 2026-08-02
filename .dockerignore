@@ -1,0 +1,14 @@
+**/bin/
+**/obj/
+
+.git
+.gitignore
+
+.vs/
+.vscode/
+
+DockerCompose*
+
+README.md
+
+.env

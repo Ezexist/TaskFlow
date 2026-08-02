@@ -8,3 +8,46 @@ on:
     pull_request:
         branches:
             - main
+            
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        
+        steps:
+             - name: Checkout repositiory
+               uses: actions/checkout@v4
+               
+             - name: Setup .NET
+               uses: actions/setup-dotnet@v4
+               with:
+                dotnet-version: '9.0.x'
+                cache:true
+                
+             - name: Restore Dependecies
+               run: dotnet restore
+               
+             - name: Build solution
+               run: dotnet build --configuration Release --no-restore
+
+               
+             - name: Login to Docker Hub
+               if: github.event_name == 'push'
+               uses: docker/login-action@v3
+               with:
+                username: ${{secrets.DOCKER_USERNAME}}
+                password: ${{secrets.DOCKER_TOKEN}}
+                
+             - name: Set up Docker Buildx
+               uses: docker/setup-buildx-action@v3
+               
+             - name: Build and Push Docker Image
+               uses: docker/build-push-action@v6
+               with:
+                 context: .
+                 push: ${{github.event_name == 'push'}}
+                 tags: ${{secrets.DOCKER_USERNAME}}/taskflow-api:latest
+
+                 cache-from: type=gha
+                 cache-to: type=gha,mode=max
+              
+
