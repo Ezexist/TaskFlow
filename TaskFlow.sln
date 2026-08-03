@@ -13,10 +13,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskFlow.Infrastructure", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{754FC069-D67B-A9D7-50A1-8D1CA196D8F1}"
 	ProjectSection(SolutionItems) = preProject
-		Dockerfile = Dockerfile
 		.env = .env
 		docker-compose.yml = docker-compose.yml
+		Dockerfile = Dockerfile
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskFlow.Tests", "TaskFlow.Tests\TaskFlow.Tests.csproj", "{FF10F9C9-90DB-4D72-8490-26253C3DFFC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskFlow.IntegrationTests", "TaskFlow.IntegrationTests\TaskFlow.IntegrationTests.csproj", "{B3DC1914-88D8-4C26-AC3C-3633B7550B47}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +44,14 @@ Global
 		{CD74E5B6-EDC9-4122-A9E0-729D1B8505A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD74E5B6-EDC9-4122-A9E0-729D1B8505A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD74E5B6-EDC9-4122-A9E0-729D1B8505A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF10F9C9-90DB-4D72-8490-26253C3DFFC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF10F9C9-90DB-4D72-8490-26253C3DFFC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF10F9C9-90DB-4D72-8490-26253C3DFFC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF10F9C9-90DB-4D72-8490-26253C3DFFC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3DC1914-88D8-4C26-AC3C-3633B7550B47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3DC1914-88D8-4C26-AC3C-3633B7550B47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3DC1914-88D8-4C26-AC3C-3633B7550B47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3DC1914-88D8-4C26-AC3C-3633B7550B47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

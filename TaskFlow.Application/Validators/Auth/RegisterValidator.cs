@@ -19,6 +19,7 @@ namespace TaskFlow.Application.Validators.Auth
 
             RuleFor(x => x.Email)
                 .NotEmpty()
+                .Matches(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")
                 .EmailAddress();
 
             RuleFor(x => x.Password)

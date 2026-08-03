@@ -29,7 +29,7 @@ namespace TaskFlow.Infrastructure.Dapper.Queries
                 SELECT
                     p."Id",
                     p."Name",
-
+                     
                     COUNT(DISTINCT t."Id") AS Tasks,
 
                     COUNT(DISTINCT CASE
